@@ -1,8 +1,9 @@
 package sg.raz.www
 
+import com.typesafe.config.{Config, ConfigFactory}
+
 import java.io.InputStreamReader
 import java.sql.{Connection, DriverManager}
-import com.typesafe.config.{ConfigFactory, Config}
 
 object App extends cask.MainRoutes:
   override def host: String = "0.0.0.0"

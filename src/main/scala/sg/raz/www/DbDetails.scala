@@ -1,8 +1,9 @@
 package sg.raz.www
 
 import com.typesafe.config.{Config, ConfigFactory}
-import java.sql.{Connection, DriverManager}
+
 import java.io.InputStreamReader
+import java.sql.{Connection, DriverManager}
 
 object DbDetails:
   Class.forName("org.postgresql.Driver")

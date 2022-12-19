@@ -1,7 +1,4 @@
-package sg.raz.www.js
+@main
+def main() =
+  println("Hello world")
 
-object MainJS {
-  @main
-  def main() =
-    println("Hello world")
-}

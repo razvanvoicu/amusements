@@ -6,7 +6,7 @@ lazy val root = (project in file("."))
   .settings(
     name := "www",
     assembly / assemblyJarName := "www-" + version.value + ".jar",
-    idePackagePrefix := Some("sg.raz.www"),
+    //idePackagePrefix := Some("sg.raz.www"),
     libraryDependencies ++= Seq(
       "com.lihaoyi" %% "cask" % "0.8.3",
       "org.postgresql" % "postgresql" % "42.5.0",
@@ -18,7 +18,7 @@ lazy val scalajs = (project in file("scalajs"))
   .enablePlugins(ScalaJSPlugin)
   .settings(
     name := "scalajs",
-    idePackagePrefix := Some("sg.raz.www.js"),
+    //idePackagePrefix := Some("sg.raz.www.js"),
     scalaJSUseMainModuleInitializer := true,
     libraryDependencies ++= Seq(
 
