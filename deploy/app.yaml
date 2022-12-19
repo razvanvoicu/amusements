@@ -1,0 +1,39 @@
+runtime: java17
+entrypoint: java -Xmx64m -jar www-0.1.0-SNAPSHOT.jar
+handlers:
+  - url: /
+    static_files: index.html
+    upload: index\.html
+    secure: always
+    redirect_http_response_code: 301
+  - url: /index\.html
+    static_files: index.html
+    upload: index\.html
+    secure: always
+    redirect_http_response_code: 301
+  - url: /main\.js
+    static_files: main.js
+    upload: main\.js
+    secure: always
+    redirect_http_response_code: 301
+  - url: /style\.css
+    static_files: style.css
+    upload: style\.css
+    secure: always
+    redirect_http_response_code: 301
+  - url: /favicon\.ico
+    static_files: favicon.ico
+    upload: favicon\.ico
+    secure: always
+    redirect_http_response_code: 301
+  - url: /static
+    static_dir: static
+    secure: always
+    redirect_http_response_code: 301
+  - url: /.*
+    secure: always
+    redirect_http_response_code: 301
+    script: auto
+
+beta_settings:
+  cloud_sql_instances: personalexperiments01:us-central1:personalexperiments01db=tcp:5432
