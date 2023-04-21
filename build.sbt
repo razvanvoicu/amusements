@@ -1,6 +1,6 @@
 ThisBuild / version := "0.1.0-SNAPSHOT"
 
-ThisBuild / scalaVersion := "3.1.3"
+ThisBuild / scalaVersion := "3.2.2"
 
 lazy val root = (project in file("."))
   .settings(
@@ -8,9 +8,9 @@ lazy val root = (project in file("."))
     assembly / assemblyJarName := "www-" + version.value + ".jar",
     //idePackagePrefix := Some("sg.raz.www"),
     libraryDependencies ++= Seq(
-      "com.lihaoyi" %% "cask" % "0.8.3",
-      "org.postgresql" % "postgresql" % "42.5.0",
-      "com.typesafe" % "config" % "1.4.2"
+      "com.lihaoyi" %% "cask" % "0.9.0",
+      "com.typesafe" % "config" % "1.4.2",
+      "com.google.cloud" % "google-cloud-storage" % "2.22.0"
     )
   )
 
@@ -26,6 +26,22 @@ lazy val scalajs = (project in file("scalajs"))
   )
 
 lazy val prepareDeploy = taskKey[Unit]("Prepares package for GCP app deploy")
+
+assembly / assemblyMergeStrategy := {
+  case PathList("META-INF","versions","9","module-info.class") =>
+    println("=====")
+    MergeStrategy.discard
+//  case p @ PathList("com", "google", "code", "qson", xs @ _*) =>
+//    println(("==========", p))
+//    MergeStrategy.first
+//  case p@PathList("com", "fasterxml", "jackson", "core", xs@_*) =>
+//    println(("==========", p))
+//    MergeStrategy.last
+  case x @ PathList(y, xs @ _*) =>
+    //println(("!!!", y, xs, x))
+    val oldStrategy = (assembly / assemblyMergeStrategy).value
+    oldStrategy(x)
+}
 
 prepareDeploy := {
   import scala.sys.process._
@@ -48,7 +64,7 @@ prepareDeploy := {
 
   println(s"Process listening on 8080:  ${netStatProcNo}")
 
-  val killCmd = s"""taskkill /F /PID $netStatProcNo"""
+  val killCmd = s"""taskkill /F /PID ${netStatProcNo.headOption.getOrElse(0)}"""
 
   if (netStatProcNo.nonEmpty && (javaProcs contains netStatProcNo.head)) {
     println(s"Issuing kill command: $killCmd")
