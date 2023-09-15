@@ -1,6 +1,6 @@
 ThisBuild / version := "0.1.0-SNAPSHOT"
 
-ThisBuild / scalaVersion := "3.2.2"
+ThisBuild / scalaVersion := "3.3.0"
 
 lazy val root = (project in file("."))
   .settings(
@@ -28,19 +28,8 @@ lazy val scalajs = (project in file("scalajs"))
 lazy val prepareDeploy = taskKey[Unit]("Prepares package for GCP app deploy")
 
 assembly / assemblyMergeStrategy := {
-  case PathList("META-INF","versions","9","module-info.class") =>
-    println("=====")
-    MergeStrategy.discard
-//  case p @ PathList("com", "google", "code", "qson", xs @ _*) =>
-//    println(("==========", p))
-//    MergeStrategy.first
-//  case p@PathList("com", "fasterxml", "jackson", "core", xs@_*) =>
-//    println(("==========", p))
-//    MergeStrategy.last
-  case x @ PathList(y, xs @ _*) =>
-    //println(("!!!", y, xs, x))
-    val oldStrategy = (assembly / assemblyMergeStrategy).value
-    oldStrategy(x)
+  case PathList("META-INF","versions","9","module-info.class") => MergeStrategy.discard
+  case path => (assembly / assemblyMergeStrategy).value(path)
 }
 
 prepareDeploy := {

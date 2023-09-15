@@ -1,4 +1,6 @@
 personalexperiments01-cebd4e9f1c35.json
+project/project
+project/target
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
@@ -6,6 +8,7 @@ target/
 
 ### IntelliJ IDEA ###
 .idea/
+.idea/misc.xml
 .idea/modules.xml
 .idea/jarRepositories.xml
 .idea/compiler.xml
@@ -13,6 +16,8 @@ target/
 *.iws
 *.iml
 *.ipr
+
+.bsp/
 
 ### Eclipse ###
 .apt_generated
