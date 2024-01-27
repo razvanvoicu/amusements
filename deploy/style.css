@@ -1,4 +1,96 @@
+body{
+    overflow: hidden;
+    scrollbar-width: none;
+}
+.base {
+    background: #204060 ;
+}
+
+#mugshot {
+    display: block;
+    margin-left:auto;
+    margin-right: auto;
+}
+
+.name {
+    font-family: Nunito, sans-serif;
+    display: block;
+    margin-left:auto;
+    margin-right: auto;
+    text-align: center;
+    color: darkgoldenrod;
+}
+
+.firstname {
+    font-size: 100px;
+    margin-top: 10px;
+}
+
+.lastname {
+    font-size: 50px;
+    margin-top: -90px;
+}
+
+#occupation {
+    font-size: 35px;
+    color: tan;
+    font-family: 'Permanent Marker', cursive;
+    display: block;
+    text-align: center;
+    margin-top: -10px;
+    overflow: hidden;
+    white-space: nowrap;
+    opacity: 0;
+}
+
+#qr {
+    display: block;
+    text-align: center;
+    margin-top: 50px;
+    opacity: 0;
+    animation: fadeIn 3s paused;
+}
+
+#members {
+    display: block;
+    text-align: right;
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+}
+
 #main-container {
     position: relative;
     display: none;
+    overflow: hidden;
+    scrollbar-width: none;
+}
+
+@keyframes fadeIn {
+    0% {opacity: 0}
+    100% {opacity: 1}
+}
+
+#scroller {
+    display: block;
+    position: absolute;
+    color: white;
+    background-color: transparent;
+    font-size: 30px;
+    overflow-y: scroll;
+    scrollbar-width: none;
+}
+
+#scroller::-webkit-scrollbar {
+    display: none
+}
+
+.shapes {
+    height: 100px;
+    width: 100px;
+    border: 1px #400000 dotted;
+    padding: 2px;
+    margin: 3px;
+    display: inline-block;
+    top: 0;
 }

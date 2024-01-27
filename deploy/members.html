@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <title>Razvan Voicu</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200;0,300;0,400;0,700;0,800;0,900;1,700;1,800;1,900&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Margarine&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lemonada&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
+</head>
+<body class="base">
+    <div id="home" style="position: absolute; display: inline; left: 10px; top: 10px">
+        <a href="index.html" style="color: lightgreen;">
+            Home
+        </a>
+    </div>
+    <div style="position: absolute; display: inline; right: 10px; top: 10px">
+        <a  id="logout" href="members.html" style="color: lightgreen;">
+            Logout
+        </a>
+    </div>
+
+    <div id="loginform" hidden="hidden" style="visibility: hidden; position: absolute; display: inline-block; width: 220px; top: 50px;">
+            <label style="display: block; font-size: 22px; color: cyan; margin-bottom: 10px;" for="uname"><b>Username</b></label>
+            <input style="display: block; font-size: 20px; width: 200px; margin: 5px 0 10px 0;" type="text" placeholder="Enter Username" name="uname" id="uname" required>
+
+            <label style="display: block; font-size: 22px; color: cyan;" for="psw"><b>Password</b></label>
+            <input style="display: block; font-size: 20px; width: 200px; margin: 5px 0 10px 0;" type="password" placeholder="Enter Password" name="psw" id="psw" required>
+
+            <button style="display: block; font-size: 20px;" id="submitBtn">Login</button>
+    </div>
+
+    <div id="apppanel" hidden="hidden" style="justify-content: center; text-align: center; visibility: hidden; color: yellow; position: absolute; top: 50px;">
+    </div>
+
+    <div id="apparea" hidden="hidden" style="visibility: hidden; position: absolute; top: 30px; left: 5px; width: 99%; height: 97%; margin: 0; padding: 0;">
+        
+    </div>
+</body>
+<script> sessionStorage.setItem("whichHtml", "members") </script>
+<script src="main.js"></script>
+</html>

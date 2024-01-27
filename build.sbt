@@ -9,6 +9,7 @@ lazy val root = (project in file("."))
     //idePackagePrefix := Some("sg.raz.www"),
     libraryDependencies ++= Seq(
       "com.lihaoyi" %% "cask" % "0.9.0",
+      "com.lihaoyi" %% "upickle" % "3.1.4",
       "com.typesafe" % "config" % "1.4.2",
       "com.google.cloud" % "google-cloud-storage" % "2.22.0"
     )
@@ -21,7 +22,7 @@ lazy val scalajs = (project in file("scalajs"))
     //idePackagePrefix := Some("sg.raz.www.js"),
     scalaJSUseMainModuleInitializer := true,
     libraryDependencies ++= Seq(
-
+      "org.scala-js" %%% "scalajs-dom" % "2.6.0"
     )
   )
 
@@ -68,8 +69,8 @@ prepareDeploy := {
   sbt.io.IO.copyFile(jarFile, new File(s"./deploy/${jarFile.name}"))
 
   println(s"Copying main JS file to deployment folder")
-  sbt.io.IO.copyFile(new File("scalajs/target/scala-3.1.3/scalajs-fastopt/main.js"), new File("./deploy/main.js"))
-  sbt.io.IO.copyFile(new File("scalajs/target/scala-3.1.3/scalajs-fastopt/main.js.map"), new File("./deploy/main.js.map"))
+  sbt.io.IO.copyFile(new File("scalajs/target/scala-3.3.0/scalajs-fastopt/main.js"), new File("./deploy/main.js"))
+  sbt.io.IO.copyFile(new File("scalajs/target/scala-3.3.0/scalajs-fastopt/main.js.map"), new File("./deploy/main.js.map"))
 
   val localBackendStart = s"""java -D"app.env"="debug" -jar .\\deploy\\${jarFile.name}"""
   println(s"Starting local backend for testing: ${localBackendStart}")

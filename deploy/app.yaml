@@ -1,5 +1,5 @@
 runtime: java17
-entrypoint: java -Xmx64m -jar www-0.1.0-SNAPSHOT.jar
+entrypoint: java -Xmx64m -D"app.env"="production" -jar www-0.1.0-SNAPSHOT.jar
 handlers:
   - url: /
     static_files: index.html
@@ -11,9 +11,19 @@ handlers:
     upload: index\.html
     secure: always
     redirect_http_response_code: 301
+  - url: /members\.html
+    static_files: members.html
+    upload: members\.html
+    secure: always
+    redirect_http_response_code: 301
   - url: /main\.js
     static_files: main.js
     upload: main\.js
+    secure: always
+    redirect_http_response_code: 301
+  - url: /main\.js\.map
+    static_files: main.js.map
+    upload: main\.js\.map
     secure: always
     redirect_http_response_code: 301
   - url: /style\.css
@@ -30,10 +40,7 @@ handlers:
     static_dir: static
     secure: always
     redirect_http_response_code: 301
-  - url: /.*
+  - url: /api/.*
     secure: always
     redirect_http_response_code: 301
     script: auto
-
-beta_settings:
-  cloud_sql_instances: personalexperiments01:us-central1:personalexperiments01db=tcp:5432

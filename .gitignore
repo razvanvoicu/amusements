@@ -13,11 +13,13 @@ target/
 .idea/jarRepositories.xml
 .idea/compiler.xml
 .idea/libraries/
+.idea/*
 *.iws
 *.iml
 *.ipr
 
 .bsp/
+.bsp/*
 
 ### Eclipse ###
 .apt_generated
@@ -44,6 +46,7 @@ build/
 ### Mac OS ###
 .DS_Store
 
-secret.conf
+secret.*
+users.json
 /deploy/main.js*
 /deploy/*.jar

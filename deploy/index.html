@@ -7,17 +7,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200;0,300;0,400;0,700;0,800;0,900;1,700;1,800;1,900&amp;display=swap" rel="stylesheet">
-    <style type="text/css" id="main-style"></style>
+    <link href="https://fonts.googleapis.com/css2?family=Margarine&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lemonada&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
 </head>
-<body>
-<h1>Raz Voicu</h1>
-<div style="font-size: 30px;">
-    <div>Curious wanderer</div>
-    <div>Unconventional thinker</div>
-    <div>Knowledge disseminator</div>
-    <div>Bitmaker extraordinaire</div>
-    <div><a href="hello">Enter</a></div>
-</div>
+<body class="base">
+    <img id="mugshot" height="200" width="200">
+    <h1 class="name firstname">
+        Raz
+    </h1>
+    <h1 class="name lastname">
+        Voicu
+    </h1>
+    <div id="occupation">
+        == Bitmaker extraordinaire ==
+    </div>
+    <a id="qr" href="https://www.linkedin.com/in/razvan-voicu-89061711/">
+        <img src="static/qr-code.png" height="150px" width="150px">
+    </a>
+    <div id="members">
+        <a href="members.html" style="color: lightgreen;">
+            Members area
+        </a>
+    </div>
 </body>
+<script> sessionStorage.setItem("whichHtml", "index") </script>
 <script src="main.js"></script>
 </html>
