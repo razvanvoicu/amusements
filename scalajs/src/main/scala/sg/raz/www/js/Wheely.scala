@@ -4,16 +4,16 @@ import org.scalajs.dom.{CanvasRenderingContext2D, Event, HTMLDivElement, window}
 
 import scala.math.Numeric
 import scala.math.Numeric.given
-import scala.math.given
+import Math.{PI, sin, cos, min}
 
 def wheely(e: Event, container: HTMLDivElement): Unit =
   val ctx = makeCanvas(container)
   val width = ctx.canvas.width
   val height = ctx.canvas.height
-  val breadth = Math.min(width, height)
+  val breadth = min(width, height)
   val samplePeriod = 20
   val clock = Clock(ctx, samplePeriod)
-  val period = 2000
+  val period = 2500
   val angle = new ValueSprite[Int]:
     override def nextState(time: Long): Unit =
       _v = ((time % period) * 360 / period).toInt
@@ -35,25 +35,31 @@ def wheely(e: Event, container: HTMLDivElement): Unit =
       ctx.stroke()
   val y0 = new ValueSprite[Int]:
     override def nextState(time: Long): Unit =
-      _v = ((1 + Math.sin(Math.PI * angle.value / 180)) * breadth / 2).toInt
+      _v = ((1 + sin(PI * angle.value / 180)) * breadth / 2).toInt
   val x1 = new ValueSprite[Int]:
     override def nextState(time: Long): Unit =
-      _v = ((1 + Math.cos(Math.PI * angle.value / 180)) * breadth / 2).toInt
+      _v = ((1 + cos(PI * angle.value / 180)) * breadth / 2).toInt
   val circDot = new StatelessSprite:
     override def render(ctx: CRC2D): Unit =
       ctx.beginPath()
       ctx.fillStyle = "red"
       ctx.strokeStyle = "red"
       ctx.lineWidth = 1
-      ctx.ellipse((x1.value + breadth/2) / 2, (y0.value + breadth/2) / 2, 15, 15, 0, 0, 2 * Math.PI)
+      ctx.ellipse((x1.value + breadth/2) / 2, (y0.value + breadth/2) / 2, 10, 10, 0, 0, 2 * PI)
       ctx.fill()
       ctx.stroke()
+      ctx.beginPath()
+      ctx.beginPath()
+      ctx.fillStyle = "cyan"
+      ctx.strokeStyle = "cyan"
+      ctx.ellipse((x1.value + breadth/2) / 2, (y0.value + breadth/2) / 2, 5, 5, 0, 0, 2 * PI)
+      ctx.fill()
   val rod = new StatelessSprite:
     override def render(ctx: CRC2D): Unit =
       ctx.beginPath()
       ctx.lineWidth = 11
       ctx.lineCap = "round"
-      ctx.strokeStyle = "yellow"
+      ctx.strokeStyle = "violet"
       ctx.moveTo(breadth/2, y0.value)
       ctx.lineTo(x1.value, breadth/2)
       ctx.stroke()
@@ -64,13 +70,26 @@ def wheely(e: Event, container: HTMLDivElement): Unit =
       ctx.strokeStyle = "cyan"
       ctx.lineWidth = 1
       ctx.moveTo(x1.value, breadth / 2)
-      ctx.ellipse(x1.value, breadth / 2, 15, 15, 0, 0, 2 * Math.PI)
+      ctx.ellipse(x1.value, breadth / 2, 10, 10, 0, 0, 2 * PI)
       ctx.closePath()
       ctx.stroke()
       ctx.fill()
       ctx.moveTo(breadth / 2, y0.value)
       ctx.beginPath()
-      ctx.ellipse(breadth / 2, y0.value, 15, 15, 0, 0, 2 * Math.PI)
+      ctx.ellipse(breadth / 2, y0.value, 10, 10, 0, 0, 2 * PI)
+      ctx.fill()
+      ctx.stroke()
+      ctx.beginPath()
+      ctx.fillStyle = "red"
+      ctx.strokeStyle = "red"
+      ctx.moveTo(x1.value, breadth / 2)
+      ctx.ellipse(x1.value, breadth / 2, 5, 5, 0, 0, 2 * PI)
+      ctx.closePath()
+      ctx.stroke()
+      ctx.fill()
+      ctx.moveTo(breadth / 2, y0.value)
+      ctx.beginPath()
+      ctx.ellipse(breadth / 2, y0.value, 5, 5, 0, 0, 2 * PI)
       ctx.fill()
       ctx.stroke()
   val marks = new StatelessSprite:
@@ -78,29 +97,40 @@ def wheely(e: Event, container: HTMLDivElement): Unit =
       val ratio1 = 0.2d
       val ratio2 = 0.8d
       ctx.beginPath()
-      ctx.fillStyle = "#f0f000"
-      ctx.strokeStyle = "#f0f000"
+      ctx.fillStyle = "orange" // "#f0f000"
+      ctx.strokeStyle = "orange" // "#f0f000"
       ctx.lineWidth = 1
-      ctx.moveTo(ratio1 * x1.value + (1-ratio1)*breadth/2, ratio1 * breadth / 2 + (1-ratio1)*y0.value)
-      ctx.ellipse(ratio1 * x1.value + (1-ratio1)*breadth/2, ratio1 * breadth / 2 + (1-ratio1)*y0.value, 10, 10, 0, 0, 2 * Math.PI)
+      val markSize = 20
+      val x00 = ratio1 * x1.value + (1 - ratio1) * breadth / 2
+      val y00 = ratio1 * breadth / 2 + (1 - ratio1) * y0.value
+      ctx.moveTo(x00, y00)
+      //ctx.ellipse(ratio1 * x1.value + (1-ratio1)*breadth/2, ratio1 * breadth / 2 + (1-ratio1)*y0.value, 10, 10, 0, 0, 2 * PI)
+      ctx.lineTo(x00 + markSize * cos(PI * (angle.value + 90 + 120) / 180), y00 + markSize * sin(PI * (angle.value + 90 + 120) / 180))
+      ctx.lineTo(x00 + markSize*cos(PI*(angle.value+90)/180), y00 + markSize*sin(PI*(angle.value+90)/180))
+      ctx.lineTo(x00 + markSize * cos(PI * (angle.value+90 - 120) / 180), y00 + markSize * sin(PI * (angle.value+90-120) / 180))
       ctx.closePath()
       ctx.stroke()
       ctx.fill()
-      ctx.moveTo(ratio2 * x1.value + (1-ratio2)*breadth/2, ratio2 * breadth / 2 + (1-ratio2)*y0.value)
+      val x10 = ratio2 * x1.value + (1 - ratio2) * breadth / 2
+      val y10 = ratio2 * breadth / 2 + (1 - ratio2) * y0.value
       ctx.beginPath()
-      ctx.ellipse(ratio2 * x1.value + (1-ratio2)*breadth/2, ratio2 * breadth / 2 + (1-ratio2)*y0.value, 10, 10, 0, 0, 2 * Math.PI)
+      ctx.moveTo(x10, y10)
+      //ctx.ellipse(ratio2 * x1.value + (1-ratio2)*breadth/2, ratio2 * breadth / 2 + (1-ratio2)*y0.value, 10, 10, 0, 0, 2 * PI)
+      ctx.lineTo(x10 + markSize * cos(PI * (angle.value + 90 + 120) / 180), y10 + markSize * sin(PI * (angle.value + 90 + 120) / 180))
+      ctx.lineTo(x10 + markSize*cos(PI*(angle.value+90)/180), y10 + markSize*sin(PI*(angle.value+90)/180))
+      ctx.lineTo(x10 + markSize * cos(PI * (angle.value+90 - 120) / 180), y10 + markSize * sin(PI * (angle.value+90-120) / 180))
       ctx.fill()
       ctx.stroke()
 
   clock(
-    Wheel(breadth / 2, breadth / 2, breadth / 4, 2, (0xec, 0x44, 0x9b)),
+    Wheel(breadth / 2, breadth / 2, breadth / 4, 2, (0xff, 0xff, 0x00)),
     hBar, vBar,
     angle,
     y0, x1,
     circDot,
     dot,
-    Trail(x1, y0, breadth, 0.2, 10, (0xf0,0xc0,0xc0), (0x61,0x46,0x25)),
-    Trail(x1, y0, breadth, 0.8, 10, (0xf0,0xc0,0xc0), (0x61,0x46,0x25)),
+    Trail(x1, y0, breadth, 0.2, 10, (0xff, 0xa5, 0), (0x61,0x46,0x25)),
+    Trail(x1, y0, breadth, 0.8, 10, (0xff, 0xa5, 0), (0x61,0x46,0x25)),
     rod,
     marks,
     circDot,
@@ -136,7 +166,7 @@ case class Wheel(centerX: Int, centerY: Int, radius: Int, strokeWidth: Int, colo
     ctx.beginPath()
     ctx.strokeStyle = tColorToString(color)
     ctx.lineWidth = strokeWidth
-    ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI)
+    ctx.arc(centerX, centerY, radius, 0, 2 * PI)
     ctx.stroke()
 
 case class Trail(
