@@ -49,7 +49,6 @@ def wheely(e: Event, container: HTMLDivElement): Unit =
       ctx.fill()
       ctx.stroke()
       ctx.beginPath()
-      ctx.beginPath()
       ctx.fillStyle = "cyan"
       ctx.strokeStyle = "cyan"
       ctx.ellipse((x1.value + breadth/2) / 2, (y0.value + breadth/2) / 2, 5, 5, 0, 0, 2 * PI)
@@ -96,31 +95,36 @@ def wheely(e: Event, container: HTMLDivElement): Unit =
     override def render(ctx: CRC2D): Unit =
       val ratio1 = 0.2d
       val ratio2 = 0.8d
-      ctx.beginPath()
       ctx.fillStyle = "orange" // "#f0f000"
       ctx.strokeStyle = "orange" // "#f0f000"
       ctx.lineWidth = 1
       val markSize = 20
-      val x00 = ratio1 * x1.value + (1 - ratio1) * breadth / 2
-      val y00 = ratio1 * breadth / 2 + (1 - ratio1) * y0.value
-      ctx.moveTo(x00, y00)
-      //ctx.ellipse(ratio1 * x1.value + (1-ratio1)*breadth/2, ratio1 * breadth / 2 + (1-ratio1)*y0.value, 10, 10, 0, 0, 2 * PI)
-      ctx.lineTo(x00 + markSize * cos(PI * (angle.value + 90 + 120) / 180), y00 + markSize * sin(PI * (angle.value + 90 + 120) / 180))
-      ctx.lineTo(x00 + markSize*cos(PI*(angle.value+90)/180), y00 + markSize*sin(PI*(angle.value+90)/180))
-      ctx.lineTo(x00 + markSize * cos(PI * (angle.value+90 - 120) / 180), y00 + markSize * sin(PI * (angle.value+90-120) / 180))
-      ctx.closePath()
-      ctx.stroke()
-      ctx.fill()
-      val x10 = ratio2 * x1.value + (1 - ratio2) * breadth / 2
-      val y10 = ratio2 * breadth / 2 + (1 - ratio2) * y0.value
-      ctx.beginPath()
-      ctx.moveTo(x10, y10)
-      //ctx.ellipse(ratio2 * x1.value + (1-ratio2)*breadth/2, ratio2 * breadth / 2 + (1-ratio2)*y0.value, 10, 10, 0, 0, 2 * PI)
-      ctx.lineTo(x10 + markSize * cos(PI * (angle.value + 90 + 120) / 180), y10 + markSize * sin(PI * (angle.value + 90 + 120) / 180))
-      ctx.lineTo(x10 + markSize*cos(PI*(angle.value+90)/180), y10 + markSize*sin(PI*(angle.value+90)/180))
-      ctx.lineTo(x10 + markSize * cos(PI * (angle.value+90 - 120) / 180), y10 + markSize * sin(PI * (angle.value+90-120) / 180))
-      ctx.fill()
-      ctx.stroke()
+      def markCoord(ratio: Double): (Double, Double) =
+        val x = ratio * x1.value + (1 - ratio) * breadth / 2
+        val y = ratio * breadth / 2 + (1 - ratio) * y0.value
+        (x, y)
+      val (x00, y00) = markCoord(ratio1)
+      val angle1Rad = PI * (angle.value + 90 + 120) / 180
+      val angle2Rad = PI * (angle.value + 90) / 180
+      val angle3Rad = PI * (angle.value + 90 - 120) / 180
+      val offset1x = markSize * cos(angle1Rad)
+      val offset1y = markSize * sin(angle1Rad)
+      val offset2x = markSize * cos(angle2Rad)
+      val offset2y = markSize * sin(angle2Rad)
+      val offset3x = markSize * cos(angle3Rad)
+      val offset3y = markSize * sin(angle3Rad)
+      def drawArrow(x: Double, y: Double): Unit =
+        ctx.beginPath()
+        ctx.moveTo(x, y)
+        ctx.lineTo(x + offset1x, y + offset1y)
+        ctx.lineTo(x + offset2x, y + offset2y)
+        ctx.lineTo(x + offset3x, y + offset3y)
+        ctx.closePath()
+        ctx.fill()
+        ctx.stroke()
+      drawArrow(x00, y00)
+      val (x10, y10) = markCoord(ratio2)
+      drawArrow(x10, y10)
 
   clock(
     Wheel(breadth / 2, breadth / 2, breadth / 4, 2, (0xff, 0xff, 0x00)),
