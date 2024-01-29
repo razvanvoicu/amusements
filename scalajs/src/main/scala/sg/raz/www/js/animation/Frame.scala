@@ -1,6 +1,5 @@
 package sg.raz.www.js.animation
 
-import org.scalajs.dom.window.console
 import sg.raz.www.js.geometry.OpenOrClosedPath.ClosedPath
 import sg.raz.www.js.geometry._
 import sg.raz.www.js.geometry.morphCurves

@@ -2,7 +2,7 @@ package sg.raz.www.js
 
 import org.scalajs.dom
 import org.scalajs.dom.window.setInterval
-import org.scalajs.dom.{CanvasRenderingContext2D, Event, HTMLCanvasElement, HTMLDivElement, console, document, window}
+import org.scalajs.dom.{CanvasRenderingContext2D, Event, HTMLCanvasElement, HTMLDivElement, document, window}
 
 import scala.collection.mutable
 
@@ -64,13 +64,13 @@ trait Osc extends LissajousSprite:
   var y: Int = 0
 
 case  class HorizOsc(
-  val left: Int,
-  val top: Int,
-  val width: Int,
-  val period: Period,
-  val size: Int,
-  val color: String,
-  val initialPosition: Int
+  left: Int,
+  top: Int,
+  width: Int,
+  period: Period,
+  size: Int,
+  color: String,
+  initialPosition: Int
 ) extends Osc:
   var position: Double = initialPosition // 0 to 359.999...
   private var oldTime: Long = 0

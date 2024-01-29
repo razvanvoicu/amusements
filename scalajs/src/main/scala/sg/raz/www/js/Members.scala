@@ -14,7 +14,6 @@ val apps = TreeMap[String, (Event, HTMLDivElement) => Unit] (
   "Shapes" -> shapes,
   "Morph" -> morph(Morph),
   "Contour" -> morph(Contour),
-  //"Test" -> morph,
   )
 
 def members(): Unit =

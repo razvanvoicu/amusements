@@ -1,7 +1,7 @@
 package sg.raz.www.js
 
 import org.scalajs.dom
-import org.scalajs.dom.{Event, HTMLCanvasElement, HTMLDivElement, console, document, window}
+import org.scalajs.dom.{Event, HTMLCanvasElement, HTMLDivElement, document, window}
 import geometry.*
 import sg.raz.www.js.animation.{Canvas, ContourFrame, MorphFrame, StateFrame}
 import sg.raz.www.js.geometry.OpenOrClosedPath.{ClosedPath, OpenPath}

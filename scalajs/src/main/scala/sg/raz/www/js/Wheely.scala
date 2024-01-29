@@ -39,58 +39,37 @@ def wheely(e: Event, container: HTMLDivElement): Unit =
   val x1 = new ValueSprite[Int]:
     override def nextState(time: Long): Unit =
       _v = ((1 + cos(PI * angle.value / 180)) * breadth / 2).toInt
+
+  def drawCirc(col: String, x: Int, y: Int, r: Int): Unit =
+    ctx.fillStyle = col
+    ctx.strokeStyle = col
+    ctx.lineWidth = 1
+    ctx.beginPath()
+    ctx.moveTo(x, y)
+    ctx.ellipse(x, y, r, r, 0, 0, 2 * PI)
+    ctx.closePath()
+    ctx.stroke()
+    ctx.fill()
+
   val circDot = new StatelessSprite:
     override def render(ctx: CRC2D): Unit =
-      ctx.beginPath()
-      ctx.fillStyle = "red"
-      ctx.strokeStyle = "red"
-      ctx.lineWidth = 1
-      ctx.ellipse((x1.value + breadth/2) / 2, (y0.value + breadth/2) / 2, 10, 10, 0, 0, 2 * PI)
-      ctx.fill()
-      ctx.stroke()
-      ctx.beginPath()
-      ctx.fillStyle = "cyan"
-      ctx.strokeStyle = "cyan"
-      ctx.ellipse((x1.value + breadth/2) / 2, (y0.value + breadth/2) / 2, 5, 5, 0, 0, 2 * PI)
-      ctx.fill()
+      drawCirc("fuchsia", (x1.value + breadth/2) / 2, (y0.value + breadth/2) / 2, 10)
+      drawCirc("cyan", (x1.value + breadth / 2) / 2, (y0.value + breadth / 2) / 2, 5)
   val rod = new StatelessSprite:
     override def render(ctx: CRC2D): Unit =
       ctx.beginPath()
       ctx.lineWidth = 11
       ctx.lineCap = "round"
-      ctx.strokeStyle = "violet"
+      ctx.strokeStyle = "gold"
       ctx.moveTo(breadth/2, y0.value)
       ctx.lineTo(x1.value, breadth/2)
       ctx.stroke()
   val dot = new StatelessSprite:
     override def render(ctx: CRC2D): Unit =
-      ctx.beginPath()
-      ctx.fillStyle = "cyan"
-      ctx.strokeStyle = "cyan"
-      ctx.lineWidth = 1
-      ctx.moveTo(x1.value, breadth / 2)
-      ctx.ellipse(x1.value, breadth / 2, 10, 10, 0, 0, 2 * PI)
-      ctx.closePath()
-      ctx.stroke()
-      ctx.fill()
-      ctx.moveTo(breadth / 2, y0.value)
-      ctx.beginPath()
-      ctx.ellipse(breadth / 2, y0.value, 10, 10, 0, 0, 2 * PI)
-      ctx.fill()
-      ctx.stroke()
-      ctx.beginPath()
-      ctx.fillStyle = "red"
-      ctx.strokeStyle = "red"
-      ctx.moveTo(x1.value, breadth / 2)
-      ctx.ellipse(x1.value, breadth / 2, 5, 5, 0, 0, 2 * PI)
-      ctx.closePath()
-      ctx.stroke()
-      ctx.fill()
-      ctx.moveTo(breadth / 2, y0.value)
-      ctx.beginPath()
-      ctx.ellipse(breadth / 2, y0.value, 5, 5, 0, 0, 2 * PI)
-      ctx.fill()
-      ctx.stroke()
+      drawCirc("fuchsia", x1.value, breadth / 2, 10)
+      drawCirc("fuchsia", breadth / 2, y0.value, 10)
+      drawCirc("cyan", x1.value, breadth / 2, 5)
+      drawCirc("cyan", breadth / 2, y0.value, 5)
   val marks = new StatelessSprite:
     override def render(ctx: CRC2D): Unit =
       val ratio1 = 0.2d
@@ -125,6 +104,8 @@ def wheely(e: Event, container: HTMLDivElement): Unit =
       drawArrow(x00, y00)
       val (x10, y10) = markCoord(ratio2)
       drawArrow(x10, y10)
+      drawCirc("cyan", x00.toInt, y00.toInt, 3)
+      drawCirc("cyan", x10.toInt, y10.toInt, 3)
 
   clock(
     Wheel(breadth / 2, breadth / 2, breadth / 4, 2, (0xff, 0xff, 0x00)),
