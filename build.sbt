@@ -4,9 +4,8 @@ ThisBuild / scalaVersion := "3.3.0"
 
 lazy val root = (project in file("."))
   .settings(
-    name := "www",
-    assembly / assemblyJarName := "www-" + version.value + ".jar",
-    //idePackagePrefix := Some("sg.raz.www"),
+    name := "amusements",
+    assembly / assemblyJarName := "amusements-" + version.value + ".jar",
     libraryDependencies ++= Seq(
       "com.lihaoyi" %% "cask" % "0.9.0",
       "com.lihaoyi" %% "upickle" % "3.1.4",
@@ -19,7 +18,6 @@ lazy val scalajs = (project in file("scalajs"))
   .enablePlugins(ScalaJSPlugin)
   .settings(
     name := "scalajs",
-    //idePackagePrefix := Some("sg.raz.www.js"),
     scalaJSUseMainModuleInitializer := true,
     libraryDependencies ++= Seq(
       "org.scala-js" %%% "scalajs-dom" % "2.6.0"

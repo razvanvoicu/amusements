@@ -24,6 +24,7 @@ def morph(m: MorphMethod)(e: dom.Event, container: HTMLDivElement): Unit =
   val scroller = createScroller(container, currentCurve, f, animate)
   window.setInterval(
     () => window.requestAnimationFrame(_ => {
+      ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
       m match
         case MorphMethod.Morph =>
           val mf = f.asInstanceOf[MorphFrame]

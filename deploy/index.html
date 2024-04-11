@@ -12,25 +12,18 @@
     <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
 </head>
 <body class="base">
-    <img id="mugshot" height="200" width="200">
-    <h1 class="name firstname">
-        Raz
-    </h1>
-    <h1 class="name lastname">
-        Voicu
-    </h1>
-    <div id="occupation">
-        == Bitmaker extraordinaire ==
-    </div>
-    <a id="qr" href="https://www.linkedin.com/in/razvan-voicu-89061711/">
-        <img src="static/qr-code.png" height="150px" width="150px">
-    </a>
-    <div id="members">
-        <a href="members.html" style="color: lightgreen;">
-            Members area
+    <div id="home" style="position: fixed; display: inline; left: 10px; top: 10px; visibility: hidden;">
+        <a href="index.html" style="color: lightgreen;">
+            Home
         </a>
     </div>
+    <div id="apppanel" hidden="hidden" style="justify-content: center; text-align: center; visibility: hidden; color: yellow; position: absolute; top: 50px;">
+    </div>
+
+    <div id="apparea" hidden="hidden" style="visibility: hidden; position: absolute; top: 30px; left: 5px; width: 99%; height: 97%; margin: 0; padding: 0;">
+        
+    </div>
 </body>
-<script> sessionStorage.setItem("whichHtml", "index") </script>
+<script> sessionStorage.setItem("whichHtml", "members") </script>
 <script src="main.js"></script>
 </html>

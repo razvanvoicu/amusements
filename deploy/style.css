@@ -6,51 +6,6 @@ body{
     background: #204060 ;
 }
 
-#mugshot {
-    display: block;
-    margin-left:auto;
-    margin-right: auto;
-}
-
-.name {
-    font-family: Nunito, sans-serif;
-    display: block;
-    margin-left:auto;
-    margin-right: auto;
-    text-align: center;
-    color: darkgoldenrod;
-}
-
-.firstname {
-    font-size: 100px;
-    margin-top: 10px;
-}
-
-.lastname {
-    font-size: 50px;
-    margin-top: -90px;
-}
-
-#occupation {
-    font-size: 35px;
-    color: tan;
-    font-family: 'Permanent Marker', cursive;
-    display: block;
-    text-align: center;
-    margin-top: -10px;
-    overflow: hidden;
-    white-space: nowrap;
-    opacity: 0;
-}
-
-#qr {
-    display: block;
-    text-align: center;
-    margin-top: 50px;
-    opacity: 0;
-    animation: fadeIn 3s paused;
-}
-
 #members {
     display: block;
     text-align: right;
@@ -93,4 +48,14 @@ body{
     margin: 3px;
     display: inline-block;
     top: 0;
+}
+
+#parameditor {
+    display: block;
+    position: absolute;
+    color: white;
+    background-color: transparent;
+    font-size: 30px;
+    overflow-y: scroll;
+    scrollbar-width: none;
 }

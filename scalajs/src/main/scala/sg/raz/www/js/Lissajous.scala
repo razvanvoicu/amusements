@@ -6,20 +6,24 @@ import org.scalajs.dom.{CanvasRenderingContext2D, Event, HTMLCanvasElement, HTML
 
 import scala.collection.mutable
 
+case class LissajousInit(
+
+)
+
 def lissajous(e: dom.Event, container: HTMLDivElement): Unit =
   val ctx = makeCanvas(container)
   val width = ctx.canvas.width
   val height = ctx.canvas.height
   ctx.lineWidth = 4.0
   ctx.strokeStyle = "#d6d640"
-  val breadth = Math.min(width - 80, height - 150)
+  val breadth = width - 20
   val periodH = Period(1000)
   val periodV = Period(1500)
-  val ho = HorizOsc(30, 70, breadth, periodH, 7, "cyan", 0).asInstanceOf[Osc]
-  val vo = VertOsc(10, 100, breadth, periodV, 7, "magenta", 0).asInstanceOf[Osc]
-  val circ = lissajousCircle(30 + breadth/2, 100 + breadth/2, breadth/2, "lightgreen", ho, vo)
+  val ho = HorizOsc(10, 10, breadth, periodH, 7, "cyan", 0).asInstanceOf[Osc]
+  val vo = VertOsc(10, 10, breadth, periodV, 7, "magenta", 0).asInstanceOf[Osc]
+  val circ = lissajousCircle(10 + breadth/2, 10 + breadth/2, breadth/2, "lightgreen", ho, vo)
   val ix = Intersect(ho, vo, 20, (0xd6,0xd6,0x40), (0, 240, 0))
-  lissajousClock(ctx, width, height, 20, Array(ho, vo, circ, ix))
+  lissajousClock(ctx, width, breadth, 20, Array(ho, vo, circ, ix))
   makeControls(container, periodH, periodV, ho, vo, breadth)
 
 def lissajousClock(ctx: CanvasRenderingContext2D, width: Int, height: Int, samplePeriod: Int, clients: Array[LissajousSprite]) =
@@ -48,12 +52,10 @@ case class lissajousCircle(val centerX: Int, val centerY: Int, val radius: Int, 
     ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI, false )
     ctx.stroke()
     val size = 25
-    // val x1 = centerX + radius * Math.cos((ho.position - 90) * Math.PI / 180)
     val y1 = centerY + radius * Math.sin((ho.position) * Math.PI / 180)
     ctx.fillStyle = ho.color
     ctx.fillRect(ho.x - size/2, y1 - size/2, size, size )
     val x2 = centerX + radius * Math.cos(vo.position * Math.PI / 180)
-    // val y2 = centerY + radius * Math.sin(vo.position * Math.PI / 180)
     ctx.fillStyle = vo.color
     ctx.fillRect(x2 - size / 2, vo.y - size / 2, size, size)
 
@@ -86,8 +88,8 @@ case  class HorizOsc(
     ctx.strokeStyle = color
     ctx.fillStyle = color
     ctx.fillRect(x - size / 2, y - size / 2, size, size)
-    ctx.fillRect(x, y, 2, width + 50)
-    ctx.fillRect(x - size / 2, y + width + 50 - size / 2, size, size)
+    ctx.fillRect(x, y, 2, width)
+    ctx.fillRect(x - size / 2, y + width - size / 2, size, size)
     ctx.stroke()
 
 case  class VertOsc(
@@ -112,8 +114,8 @@ case  class VertOsc(
     ctx.strokeStyle = color
     ctx.fillStyle = color
     ctx.fillRect(x - size / 2, y - size / 2, size, size)
-    ctx.fillRect(x, y, height + 50, 2)
-    ctx.fillRect(x + height + 50 - size / 2, y - size / 2, size, size)
+    ctx.fillRect(x, y, height, 2)
+    ctx.fillRect(x + height - size / 2, y - size / 2, size, size)
     ctx.stroke()
 
 class Intersect(ox: Osc, oy: Osc, size: Int, val startColor: (Int, Int, Int), val endColor: (Int, Int, Int))
@@ -144,76 +146,108 @@ class Intersect(ox: Osc, oy: Osc, size: Int, val startColor: (Int, Int, Int), va
       ctx.moveTo(x, y)
 
   override def draw(ctx: CanvasRenderingContext2D, canvasWidth: Int, canvasHeight: Int): Unit =
-      tracePoint()
-      startPath(ctx)
-      val withSizes = trace.toSeq.zipWithIndex.map {
-        case (coord, idx) => (coord, size * (trace.length + 1 - idx) / (trace.length + 1), idx)
-      }
-      withSizes.zip(withSizes.tail).foreach {
-        case ((_, s, idx), ((x, y), t, _)) => drawAnotherSegment(ctx, s!=t, s, idx, x, y)
-      }
-      ctx.stroke()
+    tracePoint()
+    startPath(ctx)
+    val withSizes = trace.toSeq.zipWithIndex.map {
+      case (coord, idx) => (coord, size * (trace.length + 1 - idx) / (trace.length + 1), idx)
+    }
+    withSizes.zip(withSizes.tail).foreach {
+      case ((_, s, idx), ((x, y), t, _)) => drawAnotherSegment(ctx, s!=t, s, idx, x, y)
+    }
+    ctx.stroke()
 
 def makeControls(container: HTMLDivElement, periodH: Period, periodV: Period, ho: Osc, vo: Osc, breadth: Int): Unit =
   val fH = document.createElement("div").asInstanceOf[HTMLDivElement]
   fH.style.display = "block"
   fH.style.position = "absolute"
   fH.style.color = "cyan"
-  fH.style.fontSize = "40px"
   {
     val fht = document.createElement("div").asInstanceOf[HTMLDivElement]
+    val fhmm = document.createElement("div").asInstanceOf[HTMLDivElement]
+    fhmm.innerHTML = "--"
+    fhmm.style.display = "inline"
+    fhmm.style.marginRight = "5vw"
+    fhmm.addEventListener("click", _ => {
+      if periodH.period >= 1100 then
+        periodH.period -= 1000
+        fht.innerHTML = f"${periodH.period.toDouble / 1000}%4.1f"
+    })
+    fH.appendChild(fhmm)
     val fhm = document.createElement("div").asInstanceOf[HTMLDivElement]
     fhm.innerHTML = "-"
     fhm.style.display = "inline"
-    fhm.addEventListener(
-      "click", _ => {
-        if periodH.period >= 200 then
-          periodH.period -= 100
-          fht.innerHTML = f"${periodH.period.toDouble / 1000}%4.1f"
-      })
+    fhm.addEventListener("click", _ => {
+      if periodH.period >= 200 then
+        periodH.period -= 100
+        fht.innerHTML = f"${periodH.period.toDouble / 1000}%4.1f"
+    })
     fH.appendChild(fhm)
     fht.innerHTML = f"${periodH.period.toDouble / 1000}%4.1f"
     fht.style.display = "inline"
-    fht.style.margin = "0 40px"
-    fht.addEventListener(
-      "click", _ => {
-        ho.position -= 5
-        if ho.position < 0 then ho.position = 360 + ho.position
-      }
-      )
+    fht.style.margin = "0 5vw"
+    fht.addEventListener("click", _ => {
+      ho.position -= 5
+      if ho.position < 0 then ho.position = 360 + ho.position
+    })
     fH.appendChild(fht)
     val fhp = document.createElement("div").asInstanceOf[HTMLDivElement]
     fhp.innerHTML = "+"
     fhp.style.display = "inline"
-    fhp.addEventListener(
-      "click", _ => {
-        periodH.period += 100
-        fht.innerHTML = f"${periodH.period.toDouble / 1000}%4.1f"
-      }
-      )
+    fhp.style.marginRight = "5vw"
+    fhp.addEventListener("click", _ => {
+      periodH.period += 100
+      fht.innerHTML = f"${periodH.period.toDouble / 1000}%4.1f"
+    })
     fH.appendChild(fhp)
+    val fhpp = document.createElement("div").asInstanceOf[HTMLDivElement]
+    fhpp.innerHTML = "++"
+    fhpp.style.display = "inline"
+    fhpp.addEventListener("click", _ => {
+      periodH.period += 1000
+      fht.innerHTML = f"${periodH.period.toDouble / 1000}%4.1f"
+    })
+    fH.appendChild(fhpp)
   }
   container.appendChild(fH)
-  fH.style.top = (breadth + 140) + "px"
-  fH.style.left = "40px"
+  window.setTimeout( () => {
+    val cH = document.getElementById("maincanvas").asInstanceOf[HTMLDivElement].style.height.stripSuffix("px").toInt
+    fH.style.top = s"${(cH * 1.15).toInt}px"
+    fH.style.fontSize = s"${List((cH * 0.1).toInt, 40).min}px"
+    fH.style.left = s"${(window.innerWidth - fH.clientWidth) / 2}px"
+  }, 10)
+  window.addEventListener("resize", _ => {
+    val cH = document.getElementById("maincanvas").asInstanceOf[HTMLDivElement].style.height.stripSuffix("px").toInt
+    fH.style.top = s"${(cH * 1.15).toInt}px"
+    fH.style.fontSize = s"${List((cH * 0.1).toInt, 40).min}px"
+    fH.style.left = s"${(window.innerWidth - fH.clientWidth) / 2}px"
+  })
 
   val fV = document.createElement("div").asInstanceOf[HTMLDivElement]
   fV.style.display = "block"
   fV.style.position = "absolute"
   fV.style.color = "magenta"
-  fV.style.fontSize = "40px"
   {
     val fht = document.createElement("div").asInstanceOf[HTMLDivElement]
+    val fhmm = document.createElement("div").asInstanceOf[HTMLDivElement]
+    fhmm.innerHTML = "--"
+    fhmm.style.display = "inline"
+    fhmm.addEventListener(
+      "click", _ => {
+        if periodV.period >= 1100 then
+          periodV.period -= 1000
+          fht.innerHTML = f"${periodV.period.toDouble / 1000}%4.1f"
+    })
+    fV.appendChild(fhmm)
     val fhm = document.createElement("div").asInstanceOf[HTMLDivElement]
     fhm.innerHTML = "-"
     fhm.style.display = "inline"
+    fhm.style.marginLeft = "5vw"
     fhm.addEventListener(
       "click", _ => {
         if periodV.period >= 200 then
           periodV.period -= 100
           fht.innerHTML = f"${periodV.period.toDouble / 1000}%4.1f"
-      }
-      )
+      })
     fV.appendChild(fhm)
     fht.innerHTML = f"${periodV.period.toDouble / 1000}%4.1f"
     fht.style.display = "inline"
@@ -221,9 +255,8 @@ def makeControls(container: HTMLDivElement, periodH: Period, periodV: Period, ho
       "click", _ => {
         vo.position -= 5
         if vo.position < 0 then vo.position = 360 + vo.position
-      }
-      )
-    fht.style.margin = "0 40px"
+    })
+    fht.style.margin = "0 5vw"
     fV.appendChild(fht)
     val fhp = document.createElement("div").asInstanceOf[HTMLDivElement]
     fhp.innerHTML = "+"
@@ -232,18 +265,30 @@ def makeControls(container: HTMLDivElement, periodH: Period, periodV: Period, ho
       "click", _ => {
         periodV.period += 100
         fht.innerHTML = f"${periodV.period.toDouble / 1000}%4.1f"
-      }
-      )
+    })
     fV.appendChild(fhp)
+    val fhpp = document.createElement("div").asInstanceOf[HTMLDivElement]
+    fhpp.innerHTML = "++"
+    fhpp.style.display = "inline"
+    fhpp.style.marginLeft = "5vw"
+    fhpp.addEventListener(
+      "click", _ => {
+        periodV.period += 1000
+        fht.innerHTML = f"${periodV.period.toDouble / 1000}%4.1f"
+      })
+    fV.appendChild(fhpp)
   }
   container.appendChild(fV)
-  fV.style.top = (breadth + 210) + "px"
-  fV.style.left = "40px"
-  window.setInterval(
-    () => {
-      val h = fV.clientWidth
-      fV.style.left = s"${(window.innerWidth - h) / 2}px"
-      fH.style.left = fV.style.left
-    }, 10
-    )
+  window.setTimeout( () => {
+    val cH = document.getElementById("maincanvas").asInstanceOf[HTMLDivElement].style.height.stripSuffix("px").toInt
+    fV.style.top = s"${(cH * 1.3).toInt}px"
+    fV.style.fontSize = s"${List((cH * 0.1).toInt, 40).min}px"
+    fV.style.left = s"${(window.innerWidth - fV.clientWidth) / 2}px"
+  }, 10)
+  window.addEventListener("resize", _ => {
+    val cH = document.getElementById("maincanvas").asInstanceOf[HTMLDivElement].style.height.stripSuffix("px").toInt
+    fV.style.top = s"${(cH * 1.3).toInt}px"
+    fV.style.fontSize = s"${List((cH * 0.1).toInt, 40).min}px"
+    fV.style.left = s"${(window.innerWidth - fV.clientWidth) / 2}px"
+  })
 

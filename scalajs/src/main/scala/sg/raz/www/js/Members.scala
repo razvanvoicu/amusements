@@ -3,23 +3,21 @@ package sg.raz.www.js
 import org.scalajs.dom.{Chunk, Event, HTMLButtonElement, HTMLDivElement, HTMLInputElement, HttpMethod, ReadableStreamReader, Request, RequestInit, Response, URLSearchParams, document, fetch, window}
 import sg.raz.www.js.MorphMethod.{Morph, Contour}
 
-import scala.collection.immutable.TreeMap
 import scala.scalajs.js
 import scala.scalajs.js.{Dictionary, Promise}
 import scala.scalajs.js.typedarray.Uint8Array
 
-val apps = TreeMap[String, (Event, HTMLDivElement) => Unit] (
+val apps = Seq[(String, (Event, HTMLDivElement) => Unit)] (
   "Lissajous" -> lissajous,
   "Wheely" -> wheely,
   "Shapes" -> shapes,
   "Morph" -> morph(Morph),
   "Contour" -> morph(Contour),
-  )
+)
 
 def members(): Unit =
   setMembersEventHandlers()
-  setupLogoutHandler()
-  tryRetrieveCredsAndDecideExecutionContext()
+  appsMenu()
 
 def setMembersEventHandlers(): Unit =
   window.addEventListener("load", renderMembers)
@@ -35,8 +33,6 @@ def storeCreds(user: String, authToken: String) =
   window.localStorage.setItem("authToken", authToken)
 
 def clearCreds(): Unit = Seq("user", "authToken").foreach(window.localStorage.removeItem(_))
-
-def setupLogoutHandler(): Unit = document.getElementById("logout").addEventListener("click", _ => clearCreds())
 
 def tryRetrieveCredsAndDecideExecutionContext(): Unit =
   val userName = Option(window.localStorage.getItem("user")).filter(_.nonEmpty)
@@ -58,7 +54,7 @@ def verifyToken(userName: String, authToken: String): Promise[Response] =
 
 def authenticateLoginAndProceedToApps(userName: String, authToken: String): Response => Unit = r =>
   if r.status == 200
-  then appsMenu(userName, authToken)
+  then appsMenu()
   else memberMustLogIn()
 
 def readResponseBody(r: ReadableStreamReader[Uint8Array], prev: String): Promise[String] = {
@@ -90,8 +86,7 @@ def showLoginForm(): Unit = window.setTimeout(() => {
   lf.style.visibility = "visible"
 }, 100)
 
-def appsMenu(user: String, authToken: String): Unit =
-  storeCreds(user, authToken)
+def appsMenu(): Unit =
   val apparea = document.getElementById("apparea").asInstanceOf[HTMLDivElement]
   setAppAreaRszEvHnd(apparea)
   val ap = makeAppPanel()
@@ -120,20 +115,24 @@ def setAppButtonEvHnd(b: HTMLButtonElement, apppanel: HTMLDivElement, apparea: H
   b.addEventListener("click", ev => {
     makePressed(b)
     window.setTimeout(() => {
+      makeVisible(document.getElementById("home").asInstanceOf[HTMLDivElement])
       makeHidden(apppanel)
       makeVisible(apparea)
-      apps(app)(ev, apparea)
+      apps.find(_._1 == app).foreach(_._2(ev, apparea))
     }, 10)
   })
 
 def setAppButtonStyle(appButton: HTMLButtonElement, app: String): Unit =
   appButton.id = app
-  appButton.style.color = "orange"
-  appButton.style.background = "navy"
+  appButton.style.color = "tan"
+  appButton.style.background = "darkblue"
   appButton.innerHTML = app
   appButton.style.display = "block"
+  appButton.style.fontFamily = "Margarine"
   appButton.style.fontSize = "20px"
-  appButton.style.margin = "10px auto"
+  appButton.style.margin = "20px auto"
+  appButton.style.padding = "15px"
+  appButton.style.borderRadius = "27px"
   appButton.style.width = "120px"
 
 def makeAppButton(app: String, apppanel: HTMLDivElement, apparea: HTMLDivElement): HTMLButtonElement =
@@ -142,7 +141,7 @@ def makeAppButton(app: String, apppanel: HTMLDivElement, apparea: HTMLDivElement
   setAppButtonEvHnd(appButton, apppanel, apparea, app)
   appButton
 
-def makeAppButtons(apppanel: HTMLDivElement, apparea: HTMLDivElement): Unit = apps.keys.foreach { app =>
+def makeAppButtons(apppanel: HTMLDivElement, apparea: HTMLDivElement): Unit = apps.foreach { case (app, _) =>
     val appButton = makeAppButton(app, apppanel, apparea)
     apppanel.appendChild(appButton)
   }
@@ -169,5 +168,5 @@ val displayAppsMenu: String => Unit = token =>
   storeCreds(document.getElementById("uname").asInstanceOf[HTMLInputElement].value, token)
   makeHidden(document.getElementById("loginform").asInstanceOf[HTMLDivElement])
   makeVisible(document.getElementById("apppanel").asInstanceOf[HTMLDivElement])
-  appsMenu(document.getElementById("uname").asInstanceOf[HTMLInputElement].value, token)
+  appsMenu()
 

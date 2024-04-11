@@ -25,7 +25,7 @@ class ColorAndThicknessPlot(plot: ColorPlot, n: Int, startThickness: Int, endThi
 class Frame(plot: ColorAndThicknessPlot, n: Int)(using center: CanvasCenter) extends Iterable[CanvasPoint]:
   override def iterator: Iterator[CanvasPoint] = plot.iterator.map(_.toCanvasPoint)
 
-class StateFrame(resolution: Int, startThickness: Int, endThickness: Int, colorGradient: ColorGradient)(using center: CanvasCenter):
+class StateFrame(var resolution: Int, var startThickness: Int, var endThickness: Int, var colorGradient: ColorGradient)(using center: CanvasCenter):
   private val currentPath: mutable.ArrayDeque[Point] = mutable.ArrayDeque.empty[Point]
   currentPath.ensureSize(resolution + 1)
   val futurePathPoints: mutable.ArrayDeque[Point] = mutable.ArrayDeque.empty[Point]
@@ -33,14 +33,18 @@ class StateFrame(resolution: Int, startThickness: Int, endThickness: Int, colorG
   def next(action: Option[() => Unit] = None): Unit =
     if futurePathPoints.nonEmpty then
       currentPath.prepend(futurePathPoints.removeHead())
-      if currentPath.length > resolution then currentPath.removeLast()
+      while currentPath.length > resolution do currentPath.removeLast()
     else action.foreach(_())
   def addCurve(curve: Curve): Unit =
     futurePathPoints.addAll(Discretizer(resolution, ClosedPath) <<< curve)
     if currentPath.isEmpty then next()
+  def addPoint(point: Point)(using center: CanvasCenter): Unit =
+    currentPath.prepend(point)
+    while currentPath.length > resolution do currentPath.removeLast()
+
   def lastPoint(): Option[Point] =
     currentPath.headOption.orElse(futurePathPoints.lastOption)
-  def getFrame: Frame =
+  def getFrame(using canvasCenter: CanvasCenter): Frame =
     if currentPath.isEmpty then next()
     Frame(
       ColorAndThicknessPlot(

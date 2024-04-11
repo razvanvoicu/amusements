@@ -1,5 +1,7 @@
 package sg.raz.www.js.geometry
 
+import org.scalajs.dom.window
+
 case class RGB(r: Int, g: Int, b: Int):
   private def convertToHex(k: Int) =
     val aux = "00" + Integer.toHexString(k % 256)
@@ -22,6 +24,7 @@ case class RGB(r: Int, g: Int, b: Int):
         )
     }
     result
+  override def toString: String = toCanvasString
 
 object RGB:
   def fromCanvasString(color: String): RGB =
